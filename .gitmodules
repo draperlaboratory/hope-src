@@ -38,10 +38,10 @@
 	path = riscv-newlib
 	url = ../hope-riscv-newlib.git
 	branch = master
-[submodule "llvm-riscv"]
-	path = llvm-riscv
-	url = ../hope-llvm-riscv.git
-	branch = master
+[submodule "llvm-project"]
+       path = llvm-project
+       url = ../hope-llvm-project.git
+       branch = master
 [submodule "qemu"]
 	path = qemu
 	url = ../hope-qemu.git
