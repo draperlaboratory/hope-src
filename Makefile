@@ -1,24 +1,18 @@
 .PHONY: all
 .PHONY: documentation
-.PHONY: kernel
 .PHONY: test
 .PHONY: clean
-.PHONY: clean-kernel
-.PHONY: kernel-renode
-.PHONY: test-renode
-.PHONY: clean-kernel-renode
-.PHONY: kernel-qemu
-.PHONY: test-qemu
-.PHONY: clean-kernel-qemu
+.PHONY: test-frtos
+.PHONY: test-bare
 .PHONY: distclean
 
 all:
 	$(MAKE) -C tools $@
 documentation:
 	$(MAKE) -C tools $@
-test-renode:
+test-frtos:
 	$(MAKE) -C tools $@
-test-qemu:
+test-bare:
 	$(MAKE) -C tools $@
 clean:
 	$(MAKE) -C tools $@
@@ -27,4 +21,4 @@ clean-test:
 distclean:
 	$(MAKE) -C tools $@
 
-test: test-qemu
+test: test-bare
