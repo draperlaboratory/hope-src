@@ -123,6 +123,16 @@ pipeline {
                 changedModules: changedModules,
                 status: 'SUCCESS'
             ])
+            dir('policies/policy_tests/build') {
+                deleteDir()
+            }
+            dir('policies/policy_tests/output') {
+                deleteDir()
+            }
+            sh "make -C policies/policy_tests clean"
+            dir("${env.ISP_PREFIX}/kernels") {
+                deleteDir()
+            }
         }
         failure {
             echo "Some tests failed!"
