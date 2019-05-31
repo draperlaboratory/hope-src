@@ -90,26 +90,24 @@ pipeline {
                 ])
             }
         }
-        stage('Run tests') {
-            parallel {
-                stage('Run bare tests') {
-                    steps {
-                        sh """
+        stage('Run bare tests') {
+            steps {
+                sh """
+                            make -C policies/policy_tests clean
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
                             make test-bare JOBS=auto
                         """
-                    }
-                }
-                stage('Run frtos tests') {
-                    steps {
-                        sh """
+            }
+        }
+        stage('Run frtos tests') {
+            steps {
+                sh """
+                            make -C policies/policy_tests clean
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
                             make test-frtos JOBS=auto
                         """
-                    }
-                }
             }
         }
     }
