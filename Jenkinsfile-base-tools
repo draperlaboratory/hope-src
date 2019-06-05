@@ -1,0 +1,23 @@
+@Library('hope-jenkins-library')_
+
+pipeline {
+    agent any
+    stages {
+        stage('Checkout repo') {
+            steps {
+                checkoutHopeSrc()
+            }
+        }
+        stage('Build tools') {
+            steps {
+                buildHope(this)
+            }
+        }
+        stage('Archive tools') {
+            steps {
+                sh "tar Jcf tools-bin.tar.bz2 ${env.WORKSPACE}/isp-bin"
+                archiveArtifacts(allowEmptyArchive: false, artifacts: "tools-bin.tar.bz2", fingerprint: true, onlyIfSuccessful: true)
+            }
+        }
+    }
+}
