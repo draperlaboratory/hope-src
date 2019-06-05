@@ -40,8 +40,6 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                echo "Building for updated project ${params.project}, branch ${params.branch}"
-
                 script {
                     changedModules = getChangedSubmodules()
                     shas = getUpdatedModuleShas(changedModules)
