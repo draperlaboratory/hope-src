@@ -52,9 +52,9 @@ pipeline {
                 }
 
                 echo("Getting updated submodules for ${GIT_BRANCH_LOCAL}...")
-                checkoutHopeSrc([
-                    branch: GIT_BRANCH_LOCAL
-                ])
+                // checkoutHopeSrc([
+                //     branch: GIT_BRANCH_LOCAL
+                // ])
 
                 setModulesGithubStatus([
                     message: 'Starting hope-src build.',
