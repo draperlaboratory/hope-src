@@ -62,6 +62,8 @@ pipeline {
                     changedModules: changedModules,
                     status: 'PENDING'
                 ])
+
+                slackSend color: '#FFFF00', message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} Started at ${env.BUILD_URL}."
             }
         }
         stage('Rebuild tools') {
@@ -129,6 +131,8 @@ pipeline {
             dir("${env.ISP_PREFIX}/kernels") {
                 deleteDir()
             }
+
+            slackSend color: '#00FF00', message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} Succeeded at ${env.BUILD_URL}."
         }
         failure {
             echo "Some tests failed!"
@@ -138,6 +142,8 @@ pipeline {
                 changedModules: changedModules,
                 status: 'FAILURE'
             ])
+
+            slackSend color: '#FF0000', message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} Failed at ${env.BUILD_URL}."
         }
     }
 }
