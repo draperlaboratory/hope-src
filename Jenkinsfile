@@ -37,6 +37,7 @@ def shas
 def ispPrefix
 pipeline {
     agent any
+    options { disableConcurrentBuilds() }
     stages {
         stage('Setup') {
             steps {
@@ -49,6 +50,8 @@ pipeline {
                         script: "echo ${env.GIT_BRANCH} | sed -e 's|origin/||g'",
                         returnStdout: true
                     ).trim()
+                    shas['src'] = env.GIT_COMMIT
+                    changedModules += 'src'
                 }
 
                 echo("Getting updated submodules for ${GIT_BRANCH_LOCAL}...")
