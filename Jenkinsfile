@@ -37,6 +37,7 @@ def shas
 def ispPrefix
 pipeline {
     agent any
+    options { disableConcurrentBuilds() }
     stages {
         stage('Setup') {
             steps {
