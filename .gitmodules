@@ -18,17 +18,9 @@
 	path = policy-tool
 	url = ../hope-policy-tool.git
 	branch = master
-[submodule "renode"]
-	path = renode
-	url = ../hope-renode.git
-	branch = master
 [submodule "policy-engine"]
 	path = policy-engine
 	url = ../hope-policy-engine.git
-	branch = master
-[submodule "renode-plugins"]
-	path = renode-plugins
-	url = ../hope-renode-plugins.git
 	branch = master
 [submodule "freedom-e-sdk"]
 	path = freedom-e-sdk
