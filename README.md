@@ -34,7 +34,7 @@ This is a step-by-step guide on how to build the HOPE software toolchain.
 To set the necessary environment variables, run the following command:
 
 ```
-ISP=/your/isp/build/ source ./isp-support/set-env
+ISP=/your/isp/build/ source ./tools/isp-support/set-env
 ```
 
 If no `ISP` variable is specified, the default build location is `~/.local/isp/`.
@@ -48,7 +48,7 @@ Currently, HOPE development is only supported on Ubuntu 18.04.
 On Ubuntu 18.04 run the following to install the necessary software.
 
 ```
-./isp-support/install-dependencies-ubuntu1804
+./tools/isp-support/install-dependencies-ubuntu1804
 ```
 
 ## Building
