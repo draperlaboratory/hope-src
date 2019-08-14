@@ -1,5 +1,8 @@
 @Library('hope-jenkins-library')_
 
+import hudson.tasks.test.AbstractTestResultAction
+import hudson.tasks.test.TestResult
+
 /* Pipeline for testing a PR to hope-src with various updated submodules.
    Stages:
        Setup: Gets which submodules were updated in this PR compared to master and sets initial GitHub status.
@@ -63,7 +66,7 @@ pipeline {
                     status: 'PENDING'
                 ])
 
-                slackSend color: '#FFFF00', message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} Started at ${env.BUILD_URL}."
+                slackSend color: '#FFFF00', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER} - Started."
             }
         }
         stage('Rebuild tools') {
@@ -92,26 +95,33 @@ pipeline {
         }
         stage('Run bare tests') {
             steps {
-                sh """
-                            make -C policies/policy_tests clean
-                            export ISP_PREFIX=${ispPrefix}
-                            export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                            make test-bare JOBS=auto
-                        """
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        sh """
+                                    make -C policies/policy_tests clean
+                                    export ISP_PREFIX=${ispPrefix}
+                                    export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                                    make test-bare JOBS=auto
+                                """
+                }
             }
         }
         stage('Run frtos tests') {
             steps {
-                sh """
-                            make -C policies/policy_tests clean
-                            export ISP_PREFIX=${ispPrefix}
-                            export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                            make test-frtos JOBS=auto
-                        """
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh """
+                                make -C policies/policy_tests clean
+                                export ISP_PREFIX=${ispPrefix}
+                                export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                                make test-frtos JOBS=auto
+                            """
+                }
             }
         }
     }
     post {
+        always {
+            junit 'policies/policy_tests/*_report.xml'
+        }
         success {
             echo "Successfully ran all tests!"
             //deleteDir()
@@ -132,9 +142,9 @@ pipeline {
                 deleteDir()
             }
 
-            slackSend color: '#00FF00', message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} Succeeded at ${env.BUILD_URL}."
+            slackSend color: '#00FF00', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER} - Succeeded."
         }
-        failure {
+        unstable {
             echo "Some tests failed!"
             setModulesGithubStatus([
                 message: "Some frtos and bare tests failed.",
@@ -142,8 +152,31 @@ pipeline {
                 changedModules: changedModules,
                 status: 'FAILURE'
             ])
+			script {
+					AbstractTestResultAction tra =  currentBuild.rawBuild.getAction(AbstractTestResultAction.class)
+					if (tra != null) {
+                        failed = tra.failCount
+                        failed_string = "Failed tests:"
+                        for (TestResult tr : tra.failedTests) 
+                            if (tr.title.startsWith("Case Result: "))
+                                failed_string += "\n • " + tr.title.substring("Case Result: ".length())
+                            else
+                                failed_string += "\n • " + tr.title
+                        total = tra.totalCount
+					}
+				}
+            slackSend color: '#F09E27', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER}\n${failed} tests failed (out of ${total}).\n\n${failed_string}"
 
-            slackSend color: '#FF0000', message: "${env.JOB_NAME} - ${env.BUILD_NUMBER} Failed at ${env.BUILD_URL}."
+        }
+        failure {
+            setModulesGithubStatus([
+                message: "Something failed.",
+                shas: shas,
+                changedModules: changedModules,
+                status: 'FAILURE'
+            ])
+
+            slackSend color: '#FF0000', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER} - Failed."
         }
     }
 }
