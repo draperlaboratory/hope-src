@@ -95,25 +95,39 @@ pipeline {
         }
         stage('Run bare tests') {
             steps {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                        sh """
-                                    make -C policies/policy_tests clean
-                                    export ISP_PREFIX=${ispPrefix}
-                                    export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                                    make test-bare JOBS=auto
-                                """
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh """
+                        make -C policies/policy_tests clean
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        make -C policies/policy_tests build-tests build-kernels JOBS=auto CONFIG=bare
+                        """
+                }
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh """
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        make -C policies/policy_tests run-tests JOBS=auto CONFIG=bare
+                        """
                 }
             }
         }
         stage('Run frtos tests') {
             steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh """
+                        make -C policies/policy_tests clean
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        make -C policies/policy_tests build-tests build-kernels JOBS=auto CONFIG=frtos
+                        """
+                }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh """
-                                make -C policies/policy_tests clean
-                                export ISP_PREFIX=${ispPrefix}
-                                export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                                make test-frtos JOBS=auto
-                            """
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        make -C policies/policy_tests run-tests JOBS=auto CONFIG=frtos
+                        """
                 }
             }
         }
