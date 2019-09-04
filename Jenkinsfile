@@ -1,8 +1,5 @@
 @Library('hope-jenkins-library')_
 
-import hudson.tasks.test.AbstractTestResultAction
-import hudson.tasks.test.TestResult
-
 /* Pipeline for testing a PR to hope-src with various updated submodules.
    Stages:
        Setup: Gets which submodules were updated in this PR compared to master and sets initial GitHub status.
@@ -166,20 +163,7 @@ pipeline {
                 changedModules: changedModules,
                 status: 'FAILURE'
             ])
-			script {
-					AbstractTestResultAction tra =  currentBuild.rawBuild.getAction(AbstractTestResultAction.class)
-					if (tra != null) {
-                        failed = tra.failCount
-                        failed_string = "Failed tests:"
-                        for (TestResult tr : tra.failedTests) 
-                            if (tr.title.startsWith("Case Result: "))
-                                failed_string += "\n • " + tr.title.substring("Case Result: ".length())
-                            else
-                                failed_string += "\n • " + tr.title
-                        total = tra.totalCount
-					}
-				}
-            slackSend color: '#F09E27', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER}\n${failed} tests failed (out of ${total}).\n\n${failed_string}"
+            slackSend color: '#F09E27', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER}\n" + listFailedTests()
 
         }
         failure {
