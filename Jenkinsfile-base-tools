@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Archive tools') {
             steps {
-                sh "tar Jcf tools-bin.tar.bz2 ${env.WORKSPACE}/isp-bin"
+                sh "XZ_OPT='-T2' tar Jcf tools-bin.tar.bz2 ${env.WORKSPACE}/isp-bin"
                 archiveArtifacts(allowEmptyArchive: false, artifacts: "tools-bin.tar.bz2", fingerprint: true, onlyIfSuccessful: true)
             }
         }

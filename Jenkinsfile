@@ -37,7 +37,11 @@ def shas
 def ispPrefix
 pipeline {
     agent any
-    options { disableConcurrentBuilds() }
+    options {
+        disableConcurrentBuilds()
+        disableResume()
+        timeout(time: 4, unit: 'HOURS')
+        }
     stages {
         stage('Setup') {
             steps {
@@ -69,10 +73,6 @@ pipeline {
         stage('Rebuild tools') {
             steps {
                 echo "Rebuilding hope-tools with new submodules."
-                copyArtifacts(filter: 'tools-bin.tar.bz2', fingerprintArtifacts: true, projectName: 'hope-base-tools')
-                // copyArtifacts(filter: 'tools-built-src.tar.bz2', fingerprintArtifacts: true, projectName: 'hope-base-tools')
-                sh 'tar xJf tools-bin.tar.bz2'
-                // sh 'tar xJf tools-built-src.tar.bz2 -C hope-src-full'
                 sh """
                     git checkout ${env.GIT_COMMIT}
                     git submodule update --init --recursive
@@ -113,7 +113,6 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh """
-                        make -C policies/policy_tests clean
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
                         make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=frtos
