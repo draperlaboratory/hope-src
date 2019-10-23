@@ -21,4 +21,4 @@ clean-test:
 distclean:
 	$(MAKE) -C tools $@
 
-test: test-bare
+test: test-bare test-frtos
