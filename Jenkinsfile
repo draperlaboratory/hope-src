@@ -97,14 +97,14 @@ pipeline {
                         make -C policies/policy_tests clean
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=bare
+                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=bare-qemu
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare-qemu
                         """
                 }
             }
