@@ -115,14 +115,14 @@ pipeline {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=frtos
+                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=frtos-qemu
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-qemu
                         """
                 }
             }
