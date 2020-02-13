@@ -109,6 +109,25 @@ pipeline {
                 }
             }
         }
+        stage('Run bare64 tests') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh """
+                        make -C policies/policy_tests clean
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=bare64-qemu
+                        """
+                }
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh """
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare64-qemu
+                        """
+                }
+            }
+        }
         stage('Run frtos tests') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -127,6 +146,24 @@ pipeline {
                 }
             }
         }
+        stage('Run frtos64 tests') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh """
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=frtos64-qemu
+                        """
+                }
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh """
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos64-qemu
+                        """
+                }
+            }
+        }
     }
     post {
         always {
@@ -136,7 +173,7 @@ pipeline {
             echo "Successfully ran all tests!"
             //deleteDir()
             setModulesGithubStatus([
-                message: "All frtos and bare tests passed.",
+                message: "All tests passed.",
                 shas: shas,
                 changedModules: changedModules,
                 status: 'SUCCESS'
