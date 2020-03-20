@@ -44,3 +44,9 @@
 [submodule "riscv-openocd"]
 	path = riscv-openocd
 	url = https://github.com/draperlaboratory/hope-riscv-openocd.git
+[submodule "pex-kernel"]
+	path = pex-kernel
+	url = https://github.com/draperlaboratory/hope-pex-kernel.git
+[submodule "pex-firmware"]
+	path = pex-firmware
+	url = https://github.com/draperlaboratory/hope-pex-firmware.git
