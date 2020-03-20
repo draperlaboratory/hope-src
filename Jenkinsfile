@@ -97,7 +97,7 @@ pipeline {
                         make -C policies/policy_tests clean
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=bare-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare-qemu
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
@@ -115,7 +115,7 @@ pipeline {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=bare64-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare64-qemu
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
@@ -133,7 +133,7 @@ pipeline {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=frtos-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos-qemu
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
@@ -151,7 +151,7 @@ pipeline {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-kernels JOBS=10 CONFIG=frtos64-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos64-qemu
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
@@ -184,7 +184,7 @@ pipeline {
                 deleteDir()
             }
             sh "make -C policies/policy_tests clean"
-            dir("${env.ISP_PREFIX}/kernels") {
+            dir("${env.ISP_PREFIX}/policies") {
                 deleteDir()
             }
 
