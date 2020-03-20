@@ -19,11 +19,19 @@ As `hope-src` relies on git submodules, we recommend the following
         submoduleSummary = true
 ~~~
 
-The following command will clone the full HOPE software toolchain:
+Follow these steps to clone the repo and submodules:
+
+1. Clone hope-src (*DO NOT USE `--recursive`*):
 
 ~~~
-git clone --recursive https://github.com/draperlaboratory/hope-src.git
+git clone https://github.com/draperlaboratory/hope-src.git
 ~~~
+
+2. Run `./init-submodules.sh`. This will clone the submodules, excluding private repos.
+
+OR
+
+If you have access to the private repos, run `./init-submodules.sh -p`.
 
 # Building the HOPE Toolchain
 
