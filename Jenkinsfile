@@ -75,7 +75,7 @@ pipeline {
                 echo "Rebuilding hope-tools with new submodules."
                 sh """
                     git checkout ${env.GIT_COMMIT}
-                    git submodule update --init --recursive
+                    ./init-submodules.sh -p
                 """
                 buildHope(this)
             }
