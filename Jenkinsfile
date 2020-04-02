@@ -163,6 +163,36 @@ pipeline {
                 }
             }
         }
+        stage('Run debug tests') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh """
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        export DEBUG=yes
+                        export TESTS=hello_works_1,cfi/jump_data_fails_1
+                        export POLICIES=cfi,heap
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare64-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos64-qemu
+                        """
+                }
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh """
+                        export ISP_PREFIX=${ispPrefix}
+                        export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
+                        export DEBUG=yes
+                        export TESTS=hello_works_1,cfi/jump_data_fails_1
+                        export POLICIES=cfi,heap
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare-qemu
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare64-qemu
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-qemu
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos64-qemu
+                        """
+                }
+            }
+        }
     }
     post {
         always {
