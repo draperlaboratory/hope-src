@@ -45,4 +45,4 @@ else
   done
 fi
 
-git submodule update --init
+git submodule update --init --recursive
