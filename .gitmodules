@@ -50,3 +50,12 @@
 [submodule "pex-firmware"]
 	path = pex-firmware
 	url = https://github.com/draperlaboratory/hope-pex-firmware.git
+[submodule "busybox"]
+	path = busybox
+	url = https://github.com/draperlaboratory/hope-busybox.git
+[submodule "linux"]
+	path = linux
+	url = https://github.com/draperlaboratory/hope-riscv-linux
+[submodule "riscv-pk"]
+	path = riscv-pk
+	url = https://github.com/draperlaboratory/hope-riscv-pk
