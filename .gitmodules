@@ -59,3 +59,6 @@
 [submodule "riscv-pk"]
 	path = riscv-pk
 	url = https://github.com/draperlaboratory/hope-riscv-pk
+[submodule "linux-tests"]
+	path = linux-tests
+	url = https://github.com/draperlaboratory/hope-linux-tests.git
