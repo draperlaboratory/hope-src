@@ -1,4 +1,4 @@
-@Library('hope-jenkins-library@jenkins_fpga')_
+@Library('hope-jenkins-library')_
 
 /* Pipeline for testing a PR to hope-src with various updated submodules.
    Stages:
@@ -10,7 +10,7 @@
        Updates github status based on success or failure of all previous stages.
  */
 
-String periodic_build = env.BRANCH_NAME == "pr-jenkins_fpga" ? "@midnight" : ""
+String periodic_build = env.BRANCH_NAME == "master" ? "@midnight" : ""
 
 def getGitModuleSha(String module) {
     return sh(script: """cd ${env.WORKSPACE}
@@ -75,7 +75,7 @@ pipeline {
         }
         stage('Setup for FPGA tests') {
             when {
-                branch 'pr-jenkins_fpga'
+                branch 'master'
                 anyOf {
                     triggeredBy cause: "UserIdCause"
                     triggeredBy 'TimerTrigger'
@@ -211,7 +211,7 @@ pipeline {
         }
         stage('Run FPGA tests') {
             when {
-                branch 'pr-jenkins_fpga'
+                branch 'master'
                 anyOf {
                     triggeredBy cause: "UserIdCause"
                     triggeredBy 'TimerTrigger'
