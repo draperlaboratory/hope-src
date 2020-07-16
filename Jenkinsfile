@@ -10,6 +10,8 @@
        Updates github status based on success or failure of all previous stages.
  */
 
+String periodic_build = env.BRANCH_NAME == "master" ? "@midnight" : ""
+
 def getGitModuleSha(String module) {
     return sh(script: """cd ${env.WORKSPACE}
                          git submodule update --init ${module}
@@ -37,6 +39,7 @@ def shas
 def ispPrefix
 pipeline {
     agent any
+    triggers { cron(periodic_build) }
     options {
         disableConcurrentBuilds()
         disableResume()
@@ -68,6 +71,19 @@ pipeline {
                 ])
 
                 slackSend color: '#FFFF00', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER} - Started."
+            }
+        }
+        stage('Setup for FPGA tests') {
+            when {
+                branch 'master'
+                anyOf {
+                    triggeredBy cause: "UserIdCause"
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                checkoutHopeGfe(branch: "gfe-pipe")
+                buildHopeGfe(this)
             }
         }
         stage('Rebuild tools') {
@@ -190,6 +206,60 @@ pipeline {
                         make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-qemu
                         make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos64-qemu
                         """
+                }
+            }
+        }
+        stage('Run FPGA tests') {
+            when {
+                branch 'master'
+                anyOf {
+                    triggeredBy cause: "UserIdCause"
+                    triggeredBy 'TimerTrigger'
+                }
+            }
+            steps {
+                echo "getting lock to run tests"
+                lock('VCU118') {
+                    echo "Running tests"
+                    sh """
+                            export ISP_PREFIX=${ispPrefix}
+                            export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.1/bin
+                            make -C policies/policy_tests clean-tests clean-policies
+                        """
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        sh """
+                            export ISP_PREFIX=${ispPrefix}
+                            export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.1/bin
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1 CONFIG=bare-vcu118
+                            """
+                    }
+                    sh " killall -9 hw_server || true "
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        sh """
+                            export ISP_PREFIX=${ispPrefix}
+                            export PATH=${ispPrefix}/bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.1/bin
+                            export BITSTREAM=${ispPrefix}/vcu118/bitstreams/soc_chisel_pipe_p2.bit
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1 CONFIG=bare64-vcu118
+                            """
+                    }
+                    sh " killall -9 hw_server || true "
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        sh """
+                            export ISP_PREFIX=${ispPrefix}
+                            export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.1/bin
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1  GPOLICIES= POLICIES=rwx,none,stack,heap,cfi CONFIG=frtos-vcu118
+                            """
+                    }
+                    sh " killall -9 hw_server || true "
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        sh """
+                            export ISP_PREFIX=${ispPrefix}
+                            export PATH=${ispPrefix}/bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.1/bin
+                            export BITSTREAM=${ispPrefix}/vcu118/bitstreams/soc_chisel_pipe_p2.bit
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1  GPOLICIES= POLICIES=rwx COMPOSITE=none CONFIG=frtos64-vcu118
+                            """
+                    }
+                    sh " killall -9 hw_server || true "
                 }
             }
         }
