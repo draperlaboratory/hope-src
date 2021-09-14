@@ -50,3 +50,6 @@
 [submodule "riscv-isa-sim"]
 	path = riscv-isa-sim
 	url = https://github.com/riscv/riscv-isa-sim.git
+[submodule "freedom-elf2hex"]
+	path = freedom-elf2hex
+	url = https://github.com/sifive/freedom-elf2hex
