@@ -5,7 +5,7 @@
 [submodule "riscv-gnu-toolchain"]
 	path = riscv-gnu-toolchain
 	url = https://github.com/draperlaboratory/hope-riscv-gnu-toolchain.git
-	branch = master
+	branch = upstream-2021.12.22
 [submodule "policies"]
 	path = policies
 	url = https://github.com/draperlaboratory/hope-policies.git
