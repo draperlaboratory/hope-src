@@ -21,7 +21,7 @@
 [submodule "policy-engine"]
 	path = policy-engine
 	url = https://github.com/draperlaboratory/hope-policy-engine.git
-	branch = master
+	branch = separate_elf_with_embedded_info
 [submodule "freedom-e-sdk"]
 	path = freedom-e-sdk
 	url = https://github.com/draperlaboratory/hope-freedom-e-sdk.git
