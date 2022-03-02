@@ -1,4 +1,5 @@
 .PHONY: all
+.PHONY: setup
 .PHONY: documentation
 .PHONY: test
 .PHONY: clean
@@ -7,6 +8,8 @@
 .PHONY: distclean
 
 all:
+	$(MAKE) -C tools $@
+setup:
 	$(MAKE) -C tools $@
 documentation:
 	$(MAKE) -C tools $@
