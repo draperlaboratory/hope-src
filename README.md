@@ -51,7 +51,7 @@ If no `ISP` variable is specified, the default build location is `~/.local/isp/`
 
 Currently, HOPE development has ben tested on Ubuntu 18.04, 2004 and RHEL7.
 
-### Ubuntu 18.04
+### Ubuntu
 
 On Ubuntu, run the following to install the necessary software.
 
@@ -60,7 +60,7 @@ On Ubuntu, run the following to install the necessary software.
 ```
 where XYZ is the supported version (e.g. 1804 or 2004).
 
-### RHEL 7
+### RHEL
 
 For instructions on how to install the necessary dependencies on a red hat machine,
 please consult tools/isp-support/README-RHEL7.md
