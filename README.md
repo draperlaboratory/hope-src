@@ -39,13 +39,14 @@ This is a step-by-step guide on how to build the HOPE software toolchain.
 
 ## Setting Environment Variables
 
-To set the necessary environment variables, run the following command:
+To set the necessary environment variables, run the following command, setting
+`ISP` to the directory where tools should be installed:
 
 ```
 ISP=/your/isp/build/ source ./tools/isp-support/set-env
 ```
 
-If no `ISP` variable is specified, the default build location is `~/.local/isp/`.
+If no `ISP` variable is specified, the default location is `~/.local/isp/`.
 
 ## Software Prerequisites
 
