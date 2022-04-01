@@ -5,7 +5,7 @@
 [submodule "riscv-gnu-toolchain"]
 	path = riscv-gnu-toolchain
 	url = https://github.com/draperlaboratory/hope-riscv-gnu-toolchain.git
-	branch = upstream-2021.12.22
+	branch = master
 [submodule "policies"]
 	path = policies
 	url = https://github.com/draperlaboratory/hope-policies.git
@@ -53,3 +53,6 @@
 [submodule "freedom-elf2hex"]
 	path = freedom-elf2hex
 	url = https://github.com/sifive/freedom-elf2hex
+[submodule "libns550"]
+	path = libns550
+	url = https://github.com/draperlaboratory/hope-libns550
