@@ -56,3 +56,6 @@
 [submodule "libns550"]
 	path = libns550
 	url = https://github.com/draperlaboratory/hope-libns550
+[submodule "pex-bootrom"]
+	path = pex-bootrom
+	url = https://github.com/draperlaboratory/hope-pex-bootrom.git
