@@ -46,4 +46,4 @@ else
   done
 fi
 
-git submodule update --init --recursive
+GIT_SSL_NO_VERIFY=1 git submodule update --init --recursive
