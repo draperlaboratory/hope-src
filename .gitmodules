@@ -9,7 +9,7 @@
 [submodule "policies"]
 	path = policies
 	url = https://github.com/draperlaboratory/hope-policies.git
-	branch = master
+	branch = pr-metadata-offset-test
 [submodule "FreeRTOS"]
 	path = FreeRTOS
 	url = https://github.com/draperlaboratory/hope-FreeRTOS.git
@@ -33,7 +33,7 @@
 [submodule "llvm-project"]
 	path = llvm-project
 	url = https://github.com/draperlaboratory/hope-llvm-project.git
-	branch = master
+	branch = pr-metadata-loc-fix
 [submodule "qemu"]
 	path = qemu
 	url = https://github.com/draperlaboratory/hope-qemu.git
