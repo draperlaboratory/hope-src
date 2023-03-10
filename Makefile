@@ -7,7 +7,7 @@
 .PHONY: distclean
 
 all:
-	$(MAKE) -C tools $@
+	$(MAKE) -Orecurse -C tools $@
 documentation:
 	$(MAKE) -C tools $@
 test-frtos:
