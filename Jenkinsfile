@@ -11,7 +11,7 @@
  */
 
 String periodic_build = env.BRANCH_NAME == "master" ? "@midnight" : ""
-String agent_string = env.BRANCH_NAME == "master" ? "'vcu118 && (ubuntu18.04 || ubuntu22.04)'" : "(ubuntu18.04 || ubuntu22.04)"
+String agent_string = env.BRANCH_NAME == "master" ? "'vcu118 && (ubuntu18.04 || ubuntu22.04)'" : env.BRANCH_NAME ==~ /.*fpga.*/ ? "'vcu118 && (ubuntu18.04 || ubuntu22.04)'" : "(ubuntu18.04 || ubuntu22.04)"
 
 def getGitModuleSha(String module) {
     return sh(script: """cd ${env.WORKSPACE}
@@ -47,6 +47,23 @@ pipeline {
         timeout(time: 4, unit: 'HOURS')
         }
     stages {
+        stage('Node Info')
+        {
+            steps {
+                script {
+                    echo "Running on node ${env.NODE_NAME} at ${env.WORKSPACE}"
+                    sh """
+                        hostname
+                        nproc
+                        free -h
+                        df -h .
+                        uname -a
+                        lsb_release -a || true
+                        env
+                    """
+                }
+            }
+        }
         stage('Setup') {
             steps {
                 script {
@@ -76,11 +93,14 @@ pipeline {
         }
         stage('Setup for FPGA tests') {
             when {
-                branch 'master'
                 anyOf {
+                    branch 'main'
+                    branch 'master'
+                    branch pattern: "pr-*fpga*", comparator: "GLOB"
                     triggeredBy cause: "UserIdCause"
                     triggeredBy 'TimerTrigger'
                 }
+                expression { return env.NODE_LABELS.contains('vcu118') }
             }
             steps {
                 checkoutHopeGfe(branch: "gfe-pipe")
@@ -212,15 +232,18 @@ pipeline {
         }
         stage('Run FPGA tests') {
             when {
-                branch 'master'
                 anyOf {
+                    branch 'main'
+                    branch 'master'
+                    branch pattern: "pr-*fpga*", comparator: "GLOB"
                     triggeredBy cause: "UserIdCause"
                     triggeredBy 'TimerTrigger'
                 }
+                expression { return env.NODE_LABELS.contains('vcu118') }
             }
             steps {
                 echo "getting lock to run tests"
-                lock('VCU118') {
+                lock(resource:"${env.NODE_NAME}-VCU118", variable: "LOCKED_RESOURCE") {
                     echo "Running tests"
                     sh """
                             export ISP_PREFIX=${ispPrefix}
