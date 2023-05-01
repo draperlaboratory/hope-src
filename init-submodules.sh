@@ -46,4 +46,16 @@ else
   done
 fi
 
+
+# do some extra steps in the riscv-openocd submodule
+# to deal with the upstream repo using a submodule we can't access
+GIT_SSL_NO_VERIFY=1 git submodule update --init riscv-openocd
+cd riscv-openocd 
+GIT_SSL_NO_VERIFY=1 git submodule update --init openocd
+cd openocd
+# modify the .gitmodule of the openocd to be able to download libjaylink
+sed -i 's/gitlab.zapb.de\/libjaylink/github.com\/syntacore/' .gitmodules
+cd ../..
+
+# now that we've fixed that submodule url, we can clone submodules as normal
 GIT_SSL_NO_VERIFY=1 git submodule update --init --recursive

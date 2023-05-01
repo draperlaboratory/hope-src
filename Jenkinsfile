@@ -11,7 +11,7 @@
  */
 
 String periodic_build = env.BRANCH_NAME == "master" ? "@midnight" : ""
-String agent_string = env.BRANCH_NAME == "master" ? "'vcu118 && ubuntu18.04'" : "'ubuntu18.04'"
+String agent_string = env.BRANCH_NAME == "master" ? "'vcu118 && (ubuntu18.04 || ubuntu22.04)'" : "(ubuntu18.04 || ubuntu22.04)"
 
 def getGitModuleSha(String module) {
     return sh(script: """cd ${env.WORKSPACE}
