@@ -53,5 +53,5 @@
 	path = pex-bootrom
 	url = https://github.com/draperlaboratory/hope-pex-bootrom.git
 [submodule "hope-bsp"]
-	path = hope-bsp
+	path = bsp
 	url = https://github.com/draperlaboratory/hope-bsp.git
