@@ -22,10 +22,6 @@
 	path = policy-engine
 	url = https://github.com/draperlaboratory/hope-policy-engine.git
 	branch = master
-[submodule "freedom-e-sdk"]
-	path = freedom-e-sdk
-	url = https://github.com/draperlaboratory/hope-freedom-e-sdk.git
-	branch = master
 [submodule "riscv-newlib"]
 	path = riscv-newlib
 	url = https://github.com/draperlaboratory/hope-riscv-newlib.git
@@ -53,9 +49,6 @@
 [submodule "freedom-elf2hex"]
 	path = freedom-elf2hex
 	url = https://github.com/sifive/freedom-elf2hex
-[submodule "libns550"]
-	path = libns550
-	url = https://github.com/draperlaboratory/hope-libns550
 [submodule "pex-bootrom"]
 	path = pex-bootrom
 	url = https://github.com/draperlaboratory/hope-pex-bootrom.git
