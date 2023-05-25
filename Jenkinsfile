@@ -114,14 +114,14 @@ pipeline {
                         make -C policies/policy_tests clean
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare-hifive32
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare-qemu
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare-hifive32
                         """
                 }
             }
@@ -132,14 +132,14 @@ pipeline {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare64-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare-hifive64
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare64-qemu
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare-hifive64
                         """
                 }
             }
@@ -150,14 +150,14 @@ pipeline {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos-hifive32
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-qemu
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-hifive32
                         """
                 }
             }
@@ -168,14 +168,14 @@ pipeline {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos64-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos-hifive64
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh """
                         export ISP_PREFIX=${ispPrefix}
                         export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos64-qemu
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-hifive64
                         """
                 }
             }
@@ -189,10 +189,10 @@ pipeline {
                         export DEBUG=yes
                         export TESTS=hello_works_1,cfi/jump_data_fails_1
                         export POLICIES=cfi,heap
-                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare-qemu
-                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare64-qemu
-                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos-qemu
-                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos64-qemu
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare-hifive32
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=bare-hifive64
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos-hifive32
+                        make -C policies/policy_tests build-tests build-policies JOBS=10 CONFIG=frtos-hifive64
                         """
                 }
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
@@ -202,10 +202,10 @@ pipeline {
                         export DEBUG=yes
                         export TESTS=hello_works_1,cfi/jump_data_fails_1
                         export POLICIES=cfi,heap
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare-qemu
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare64-qemu
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-qemu
-                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos64-qemu
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare-hifive32
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=bare-hifive64
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-hifive32
+                        make -C policies/policy_tests run-tests JOBS=10 CONFIG=frtos-hifive64
                         """
                 }
             }
@@ -231,7 +231,7 @@ pipeline {
                         sh """
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.2/bin
-                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1 CONFIG=bare-vcu118
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1 CONFIG=bare-ssith-p1
                             """
                     }
                     sh " killall -9 hw_server || true "
@@ -240,7 +240,7 @@ pipeline {
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}/bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.2/bin
                             export BITSTREAM=${ispPrefix}/vcu118/bitstreams/soc_chisel_pipe_p2.bit
-                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1 CONFIG=bare64-vcu118
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1 CONFIG=bare-ssith-p2
                             """
                     }
                     sh " killall -9 hw_server || true "
