@@ -49,9 +49,6 @@
 [submodule "freedom-elf2hex"]
 	path = freedom-elf2hex
 	url = https://github.com/sifive/freedom-elf2hex
-[submodule "pex-bootrom"]
-	path = pex-bootrom
-	url = https://github.com/draperlaboratory/hope-pex-bootrom.git
 [submodule "hope-bsp"]
 	path = bsp
 	url = https://github.com/draperlaboratory/hope-bsp.git
