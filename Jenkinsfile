@@ -87,7 +87,8 @@ pipeline {
                     message: 'Starting hope-src build.',
                     shas: shas,
                     changedModules: changedModules,
-                    status: 'PENDING'
+                    status: 'PENDING',
+                    context: "${env.JOB_BASE_NAME}"
                 ])
 
                 slackSend color: '#FFFF00', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER} - Started."
@@ -125,7 +126,8 @@ pipeline {
                     message: "Running tests for hope-src.",
                     shas: shas,
                     changedModules: changedModules,
-                    status: 'PENDING'
+                    status: 'PENDING',
+                    context: "${env.JOB_BASE_NAME}"
                 ])
             }
         }
@@ -305,7 +307,8 @@ pipeline {
                 message: "All tests passed.",
                 shas: shas,
                 changedModules: changedModules,
-                status: 'SUCCESS'
+                status: 'SUCCESS',
+                context: "${env.JOB_BASE_NAME}"
             ])
             dir('policies/policy_tests/build') {
                 deleteDir()
@@ -333,7 +336,8 @@ pipeline {
                 message: "${failed} of ${total} tests failed.",
                 shas: shas,
                 changedModules: changedModules,
-                status: 'FAILURE'
+                status: 'FAILURE',
+                context: "${env.JOB_BASE_NAME}"
             ])
             slackSend color: '#F09E27', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER}\n" + listFailedTests()
 
@@ -343,7 +347,8 @@ pipeline {
                 message: "Something unexpected failed.",
                 shas: shas,
                 changedModules: changedModules,
-                status: 'FAILURE'
+                status: 'FAILURE',
+                context: "${env.JOB_BASE_NAME}"
             ])
 
             slackSend color: '#FF0000', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER} - Failed."
