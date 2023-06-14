@@ -248,7 +248,7 @@ pipeline {
                         sh """
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.2/bin
-                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1  GPOLICIES= POLICIES=rwx,none,stack,heap,cfi CONFIG=frtos-vcu118
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1  GPOLICIES= POLICIES=rwx,none,stack,heap,cfi CONFIG=frtos-ssith-p1
                             """
                     }
                     sh " killall -9 hw_server || true "
@@ -257,7 +257,7 @@ pipeline {
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}/bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.2/bin
                             export BITSTREAM=${ispPrefix}/vcu118/bitstreams/soc_chisel_pipe_p2.bit
-                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1  GPOLICIES= POLICIES=rwx COMPOSITE=none CONFIG=frtos64-vcu118
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1  GPOLICIES= POLICIES=rwx COMPOSITE=none CONFIG=frtos-ssith-p2
                             """
                     }
                     sh " killall -9 hw_server || true "
