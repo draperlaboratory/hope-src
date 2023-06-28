@@ -52,3 +52,6 @@
 [submodule "hope-bsp"]
 	path = bsp
 	url = https://github.com/draperlaboratory/hope-bsp.git
+[submodule "freedom-e-sdk"]
+	path = freedom-e-sdk
+	url = https://github.com/draperlaboratory/hope-freedom-e-sdk.git
