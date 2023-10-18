@@ -247,6 +247,9 @@ pipeline {
                 echo "getting lock to run tests"
                 lock(resource:"${env.NODE_NAME}-VCU118", variable: "LOCKED_RESOURCE") {
                     echo "Running tests"
+                    sh " find /tmp -maxdepth 1 -name 'tmp.*' -user jenkins -print -exec rm -rf '{}' + "
+                    sh " find /tmp -maxdepth 1 -name 'digilent-adept*' -print -exec rm -f '{}' + "
+                    sh " killall -9 hw_server || true "
                     sh """
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.2/bin
@@ -286,6 +289,7 @@ pipeline {
                             """
                     }
                     sh " killall -9 hw_server || true "
+                    sh " find /tmp -maxdepth 1 -name 'tmp.*' -user jenkins -print -exec rm -rf '{}' + "
                 }
             }
         }
