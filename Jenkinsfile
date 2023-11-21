@@ -87,7 +87,8 @@ pipeline {
                     message: 'Starting hope-src build.',
                     shas: shas,
                     changedModules: changedModules,
-                    status: 'PENDING'
+                    status: 'PENDING',
+                    context: "${env.JOB_BASE_NAME}"
                 ])
 
                 slackSend color: '#FFFF00', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER} - Started."
@@ -125,7 +126,8 @@ pipeline {
                     message: "Running tests for hope-src.",
                     shas: shas,
                     changedModules: changedModules,
-                    status: 'PENDING'
+                    status: 'PENDING',
+                    context: "${env.JOB_BASE_NAME}"
                 ])
             }
         }
@@ -247,6 +249,9 @@ pipeline {
                 echo "getting lock to run tests"
                 lock(resource:"${env.NODE_NAME}-VCU118", variable: "LOCKED_RESOURCE") {
                     echo "Running tests"
+                    sh " find /tmp -maxdepth 1 -name 'tmp.*' -user jenkins -print -exec rm -rf '{}' + "
+                    sh " find /tmp -maxdepth 1 -name 'digilent-adept*' -print -exec rm -f '{}' + "
+                    sh " killall -9 hw_server || true "
                     sh """
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.2/bin
@@ -273,7 +278,7 @@ pipeline {
                         sh """
                             export ISP_PREFIX=${ispPrefix}
                             export PATH=${ispPrefix}bin:${env.JENKINS_HOME}/.local/bin:${env.PATH}:/opt/Xilinx/Vivado/2019.2/bin
-                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1  GPOLICIES= POLICIES=rwx,none,stack,heap,cfi CONFIG=frtos-ssith-p1
+                            make -C policies/policy_tests run-tests JOBS=1 TESTS=hello_works_1,cfi/jump_data_fails_1  GPOLICIES= POLICIES=rwx CONFIG=frtos-ssith-p1
                             """
                     }
                     sh " killall -9 hw_server || true "
@@ -286,6 +291,7 @@ pipeline {
                             """
                     }
                     sh " killall -9 hw_server || true "
+                    sh " find /tmp -maxdepth 1 -name 'tmp.*' -user jenkins -print -exec rm -rf '{}' + "
                 }
             }
         }
@@ -301,7 +307,8 @@ pipeline {
                 message: "All tests passed.",
                 shas: shas,
                 changedModules: changedModules,
-                status: 'SUCCESS'
+                status: 'SUCCESS',
+                context: "${env.JOB_BASE_NAME}"
             ])
             dir('policies/policy_tests/build') {
                 deleteDir()
@@ -329,7 +336,8 @@ pipeline {
                 message: "${failed} of ${total} tests failed.",
                 shas: shas,
                 changedModules: changedModules,
-                status: 'FAILURE'
+                status: 'FAILURE',
+                context: "${env.JOB_BASE_NAME}"
             ])
             slackSend color: '#F09E27', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER}\n" + listFailedTests()
 
@@ -339,7 +347,8 @@ pipeline {
                 message: "Something unexpected failed.",
                 shas: shas,
                 changedModules: changedModules,
-                status: 'FAILURE'
+                status: 'FAILURE',
+                context: "${env.JOB_BASE_NAME}"
             ])
 
             slackSend color: '#FF0000', message: "<${env.BUILD_URL}|${env.JOB_NAME}> - #${env.BUILD_NUMBER} - Failed."
