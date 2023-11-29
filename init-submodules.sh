@@ -3,7 +3,7 @@
 submodules=($(git submodule--helper list | awk '{$1=$2=$3=""; print substr($0,4)}'))
 
 private_submodules=(
-  pex-bootrom
+  bsp
   pex-kernel
   pex-firmware
 )
